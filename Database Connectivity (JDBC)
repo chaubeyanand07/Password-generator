@@ -1,0 +1,85 @@
+Database Connectivity (JDBC)
+
+JDBC (Java Database Connectivity) is used in the project to connect the Java application with the database. It allows the program to store and
+retrieve data such as generated passwords, logs, or user inputs. JDBC provides the bridge between Java code and SQL queries, enabling smooth
+communication with databases like MySQL, SQLite, or Oracle.
+
+
+1. Loading the Driver
+
+The database driver is responsible for enabling Java to communicate with a specific database.
+The driver loads automatically in modern JDBC versions, allowing easy connection setup.
+
+
+2. Establishing the Connection
+
+A connection is created using DriverManager.getConnection(), where the database URL, username, and password are provided.
+Once connected, Java can execute SQL operations through this connection.
+
+
+
+3. Executing SQL Queries
+
+JDBC allows executing SQL queries using:
+Statement
+PreparedStatement
+ResultSet
+PreparedStatement is preferred because it is secure, fast, and prevents SQL injection attacks.
+
+
+4. Closing the Connection
+
+After operations are completed, the connection is closed to free resources and maintain efficiency.
+
+
+
+Sample JDBC Code (Project-Ready)
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class DBConnection {
+
+    public static Connection getConnection() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/passworddb";
+            String user = "root";
+            String pass = "";
+
+            return DriverManager.getConnection(url, user, pass);
+
+        } catch (Exception e) {
+            System.out.println("Connection Failed: " + e.getMessage());
+            return null;
+        }
+    }
+}
+
+class PasswordDAO {
+
+    public void savePassword(String pwd) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "INSERT INTO passwords(password) VALUES(?)";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, pwd);
+
+            ps.executeUpdate();
+            con.close();
+
+            System.out.println("Password Saved Successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+
+Summary
+
+JDBC provides the essential link between Java and the database. By establishing a connection, executing SQL queries, and safely closing resources, 
+it enables smooth and secure data management within the project.
