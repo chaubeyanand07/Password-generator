@@ -1,0 +1,61 @@
+Implement JDBC for Database Connectivity
+
+JDBC is implemented in the project to allow the Java program to connect with the database and perform operations such as storing passwords,
+retrieving data, or updating records. Implementing JDBC ensures that the application communicates smoothly with the backend database using SQL queries.
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class DBHelper {
+
+    public static Connection connect() {
+        try {
+            String url = "jdbc:mysql://localhost:3306/passworddb";
+            String user = "root";
+            String pass = "";
+
+            return DriverManager.getConnection(url, user, pass);
+
+        } catch (Exception e) {
+            System.out.println("Connection Error: " + e.getMessage());
+            return null;
+        }
+    }
+}
+
+class PasswordService {
+
+    public void savePassword(String password) {
+        try {
+            Connection con = DBHelper.connect();
+
+            String sql = "INSERT INTO passwords(password) VALUES(?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, password);
+
+            ps.executeUpdate();
+            con.close();
+
+            System.out.println("Password stored successfully!");
+
+        } catch (Exception e) {
+            System.out.println("Error while saving: " + e.getMessage());
+        }
+    }
+}
+
+
+
+
+Summary
+
+JDBC is implemented by connecting to the database using DriverManager, running SQL commands through PreparedStatement, handling errors safely,
+and closing the connection after completing the operations. This ensures reliable and secure communication between the Java application and the database.
+
+
+
+
+
+
