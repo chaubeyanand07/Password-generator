@@ -1,0 +1,90 @@
+Servlets & Web Integration
+
+Servlets are Java programs that run on a web server and handle client requests. In the Password Generator project, servlets are
+used to integrate the Java backend with a web interface, allowing users to generate and manage passwords through a browser.
+
+1. Role of Servlets
+
+Receive requests from web clients (HTML forms)
+
+Process business logic like password generation
+Send responses back to the client dynamically
+Example workflow:
+
+User fills a web form specifying password length and type.
+
+Servlet receives form data.
+
+Servlet calls PasswordGenerator class to create a password.
+
+Servlet sends generated password back to the browser for display.
+
+
+2. Web Integration
+
+HTML pages are used for user input and output display.
+
+Forms send requests to servlets using GET or POST methods.
+
+JSP (Java Server Pages) can optionally be used for dynamic rendering of results.
+
+Servlets interact with JDBC to store or retrieve passwords from the database.
+
+
+3. Key Features Implemented
+
+Form Validation – Ensures correct input (length, character types).
+
+Dynamic Response – Password is generated on the fly and displayed to the user.
+
+Database Operations – Generated passwords can be saved or retrieved via servlets.
+
+Modular Design – Backend logic is separated from web interface.
+
+
+
+4. Example Servlet Code
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet("/GeneratePassword")
+public class PasswordServlet extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int length = Integer.parseInt(request.getParameter("length"));
+
+        PasswordGenerator generator = new PasswordGenerator(length);
+        String password = generator.generatePassword();
+
+        // Optionally save to database
+        PasswordDAO dao = new PasswordDAO();
+        dao.savePassword(password);
+
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<h2>Your Generated Password: " + password + "</h2>");
+    }
+}
+
+
+5. How Web Integration Helps
+
+Users can access the password generator from any browser, making it platform-independent.
+
+Easy to create user-friendly interfaces using HTML/CSS.
+
+Backend logic (Java classes) and frontend (HTML/JSP) are separated, making the system modular.
+
+Allows integration with database for persistence of generated passwords.
+
+
+6. Summary
+
+Servlets & Web Integration bridge the Java backend and the web frontend, enabling users to generate, display, and store passwords through a browser interface.
+It demonstrates the project’s capability to work in a web-based environment, combining core Java, JDBC, and web technologies.
